@@ -1,0 +1,12 @@
+{
+  "commit": {
+    "commit": "8601ab5b62c73c46cb2f934020282751dc97379a",
+    "author": "Adam Sparks <adamhsparks@gmail.com>",
+    "time": "2020-12-14 04:59:07",
+    "files": 8,
+    "merge": true,
+    "message": "Merge branch 'devel'\n"
+  },
+  "remote": "https://github.com/ropensci/nasapower",
+  "pkg": "nasapower"
+}

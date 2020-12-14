@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://docs.ropensci.org/nasapower/index.html</loc>
+  </url>
+  <url>
+    <loc>https://docs.ropensci.org/nasapower/reference/get_power.html</loc>
+  </url>
+  <url>
+    <loc>https://docs.ropensci.org/nasapower/reference/nasapower-package.html</loc>
+  </url>
+  <url>
+    <loc>https://docs.ropensci.org/nasapower/reference/parameters.html</loc>
+  </url>
+  <url>
+    <loc>https://docs.ropensci.org/nasapower/articles/nasapower.html</loc>
+  </url>
+  <url>
+    <loc>https://docs.ropensci.org/nasapower/articles/nasapower_states_example.html</loc>
+  </url>
+</urlset>

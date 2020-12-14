@@ -1,0 +1,11 @@
+pandoc: '2.5'
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  nasapower: nasapower.html
+  nasapower_states_example: nasapower_states_example.html
+last_built: 2021-03-10T22:57Z
+urls:
+  reference: https://docs.ropensci.org/nasapower/reference
+  article: https://docs.ropensci.org/nasapower/articles
+
