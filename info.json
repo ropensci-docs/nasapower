@@ -1,0 +1,12 @@
+{
+  "commit": {
+    "commit": "e0954c8ca1a9f4b7a6f26d47eb5323e02bcc04ff",
+    "author": "Adam H. Sparks <adamhsparks@icloud.com>",
+    "time": "2024-03-28 01:44:00",
+    "files": 2,
+    "merge": false,
+    "message": "Clarifies error messages and updates README acknowledgment for POWER data (#84)\n\n"
+  },
+  "repo": "https://github.com/ropensci/nasapower",
+  "pkg": "nasapower"
+}
