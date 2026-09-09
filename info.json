@@ -1,0 +1,13 @@
+{
+  "commit": {
+    "commit": "6b9f6892f3c94068597e36efb3b9af03fac26e9a",
+    "author": "Adam H. Sparks <adamhsparks@icloud.com>",
+    "time": "2026-08-09T23:35:04Z",
+    "files": 1,
+    "merge": false,
+    "message": "chore: update WORDLIST\n"
+  },
+  "repo": "https://github.com/ropensci/nasapower",
+  "pkg": "nasapower",
+  "time": "2026-09-09T07:35:16Z"
+}

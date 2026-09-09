@@ -1,0 +1,305 @@
+# nasapower
+
+## Introduction
+
+{nasapower} aims to make it quick and easy to automate downloading NASA
+[POWER](https://power.larc.nasa.gov) global meteorology, surface solar
+energy and climatology data data in your R session as a tidy data frame
+for analysis and use in modelling or other purposes using
+[`get_power()`](https://docs.ropensci.org/nasapower/reference/get_power.md).
+POWER (Prediction Of Worldwide Energy Resource) data are freely
+available for download through a web interface with a spatial resolution
+of 0.5 x 0.625 degree latitude and longitude for meteorology and 1 x 1
+degree latitude and longitude for solar parameters with various temporal
+resolutions depending on the POWER parameter and community.
+
+## Using get_power() to fetch POWER data
+
+The
+[`get_power()`](https://docs.ropensci.org/nasapower/reference/get_power.md)
+function has eight possible arguments and returns a data frame with a
+metadata header in the current R session.
+
+### Example fetching daily data for a single point
+
+Fetch daily “AG” community temperature, relative humidity and
+precipitation for January 1985 for Kingsthorpe, Queensland, Australia.
+
+``` r
+
+library("nasapower")
+daily_single_ag <- get_power(
+  community = "ag",
+  lonlat = c(151.81, -27.48),
+  pars = c("RH2M", "T2M", "PRECTOTCORR"),
+  dates = c("1985-01-01", "1985-01-31"),
+  temporal_api = "daily"
+)
+
+daily_single_ag
+#> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> 
+#> ── NASA/POWER Source Native Resolution Daily Data  ──────────────────────────────────────────────────────────────────
+#> Dates (month/day/year): 01/01/1985 through 01/31/1985 in LST
+#> Location: latitude -27.48 longitude 151.81
+#> elevation from MERRA-2: Average for 0.5 x 0.625 degree lat/lon region = 442.77 meters
+#> The value for missing source data that cannot be computed or is outside of the sources availability range: NA
+#> parameter(s):
+#> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> Parameters:
+#> RH2M MERRA-2 Relative Humidity at 2 Meters (%) ; T2M MERRA-2 Temperature at 2 Meters (C) ; PRECTOTCORR MERRA-2
+#> Precipitation Corrected (mm/day)
+#> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> # A tibble: 31 × 10
+#>      LON   LAT  YEAR    MM    DD   DOY YYYYMMDD    RH2M   T2M PRECTOTCORR
+#>    <dbl> <dbl> <dbl> <int> <int> <int> <date>     <dbl> <dbl>       <dbl>
+#>  1  152. -27.5  1985     1     1     1 1985-01-01  54.7  24.9        0.9 
+#>  2  152. -27.5  1985     1     2     2 1985-01-02  42.1  28.6        0.49
+#>  3  152. -27.5  1985     1     3     3 1985-01-03  43.5  27.4        0.01
+#>  4  152. -27.5  1985     1     4     4 1985-01-04  48.9  24.3        0.05
+#>  5  152. -27.5  1985     1     5     5 1985-01-05  55.3  26.5        1.33
+#>  6  152. -27.5  1985     1     6     6 1985-01-06  60.3  27.0        4.88
+#>  7  152. -27.5  1985     1     7     7 1985-01-07  63.1  27.2       10.7 
+#>  8  152. -27.5  1985     1     8     8 1985-01-08  70.6  24.9        9.99
+#>  9  152. -27.5  1985     1     9     9 1985-01-09  60.0  26.1        2.45
+#> 10  152. -27.5  1985     1    10    10 1985-01-10  45.2  27.0        0.48
+#> # ℹ 21 more rows
+```
+
+### Example fetching daily data for an area
+
+Fetch daily “ag” community relative humidity for south east Queensland
+region.
+
+``` r
+
+daily_region_ag <- get_power(
+  community = "ag",
+  lonlat = c(150.5, -28.5, 153.5, -25.5),
+  pars = "RH2M",
+  dates = c("1985-01-01", "1985-01-02"),
+  temporal_api = "daily"
+)
+
+daily_region_ag
+#> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> 
+#> ── NASA/POWER Source Native Resolution Daily Data  ──────────────────────────────────────────────────────────────────
+#> Dates (month/day/year): 01/01/1985 through 01/02/1985 in LST
+#> Location: Regional
+#> elevation from MERRA-2: Average for 0.5 x 0.625 degree lat/lon region = na meters
+#> The value for missing source data that cannot be computed or is outside of the sources availability range: NA
+#> parameter(s):
+#> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> Parameters:
+#> RH2M MERRA-2 Relative Humidity at 2 Meters (%)
+#> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> # A tibble: 70 × 8
+#>      LAT   LON  YEAR    MM    DD   DOY YYYYMMDD    RH2M
+#>    <dbl> <dbl> <dbl> <int> <int> <int> <date>     <dbl>
+#>  1 -28.5  151.  1985     1     1     1 1985-01-01  42.0
+#>  2 -28.5  151.  1985     1     1     1 1985-01-01  42.0
+#>  3 -28.5  152.  1985     1     1     1 1985-01-01  54.3
+#>  4 -28.5  152.  1985     1     1     1 1985-01-01  61.7
+#>  5 -28.5  153.  1985     1     1     1 1985-01-01  66.1
+#>  6 -28    151.  1985     1     1     1 1985-01-01  44.8
+#>  7 -28    151.  1985     1     1     1 1985-01-01  46.8
+#>  8 -28    152.  1985     1     1     1 1985-01-01  54.9
+#>  9 -28    152.  1985     1     1     1 1985-01-01  57.9
+#> 10 -28    153.  1985     1     1     1 1985-01-01  61.7
+#> # ℹ 60 more rows
+```
+
+### Example fetching interannual data for an area
+
+Fetch interannual solar cooking parameters for south east Queensland
+region and create a single data.
+
+``` r
+
+interannual_clrsky <- get_power(
+  community = "re",
+  lonlat = c(150.5, -28.5, 153.5, -25.5),
+  dates = c("1984", "1985"),
+  temporal_api = "monthly",
+  pars = "CLRSKY_SFC_SW_DWN"
+)
+
+interannual_allsky <- get_power(
+  community = "re",
+  lonlat = c(150.5, -28.5, 153.5, -25.5),
+  dates = c("1984", "1985"),
+  temporal_api = "monthly",
+  pars = "ALLSKY_SFC_SW_DWN"
+)
+
+interannual_list <- list(interannual_clrsky, interannual_allsky)
+
+interannual_re <- do.call("rbind", interannual_list)
+
+interannual_re
+#> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> 
+#> ── NASA/POWER Source Native Resolution Monthly and Annual  ──────────────────────────────────────────────────────────
+#> Dates (month/day/year): 01/01/1984 through 12/31/1985 in LST
+#> Location: Regional
+#> Elevation from MERRA-2: Average for 0.5 x 0.625 degree lat/lon region = na meters
+#> The value for missing source data that cannot be computed or is outside of the sources availability range: NA
+#> Parameter(s):
+#> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> Parameters:
+#> CLRSKY_SFC_SW_DWN CERES SYN1deg Clear Sky Surface Shortwave Downward Irradiance (kW-hr/m^2/day)
+#> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> # A tibble: 64 × 17
+#>    PARAMETER          YEAR   LAT   LON   JAN   FEB   MAR   APR   MAY   JUN   JUL   AUG   SEP   OCT   NOV   DEC   ANN
+#>    <chr>             <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+#>  1 CLRSKY_SFC_SW_DWN  1984 -25.5  150.  8.48  7.99  7.05  5.80  4.80  4.31  4.60  5.50  6.83  7.72  8.61  8.87  6.71
+#>  2 CLRSKY_SFC_SW_DWN  1984 -25.5  152.  8.43  7.92  7.00  5.71  4.74  4.24  4.56  5.46  6.78  7.63  8.48  8.88  6.65
+#>  3 CLRSKY_SFC_SW_DWN  1984 -25.5  152.  8.35  7.85  6.91  5.65  4.70  4.21  4.46  5.26  6.62  7.51  8.40  8.73  6.55
+#>  4 CLRSKY_SFC_SW_DWN  1984 -25.5  154.  8.26  7.76  6.79  5.56  4.56  4.13  4.28  5.23  6.45  7.38  8.19  8.42  6.41
+#>  5 CLRSKY_SFC_SW_DWN  1984 -26.5  150.  8.52  8.00  7.00  5.72  4.72  4.16  4.49  5.46  6.83  7.83  8.63  8.94  6.69
+#>  6 CLRSKY_SFC_SW_DWN  1984 -26.5  152.  8.56  7.98  6.95  5.65  4.68  4.16  4.47  5.44  6.81  7.72  8.64  9.02  6.67
+#>  7 CLRSKY_SFC_SW_DWN  1984 -26.5  152.  8.43  7.97  6.91  5.63  4.62  4.12  4.41  5.38  6.72  7.61  8.49  8.86  6.59
+#>  8 CLRSKY_SFC_SW_DWN  1984 -26.5  154.  8.33  7.81  6.77  5.48  4.45  4.00  4.18  5.17  6.40  7.42  8.36  8.66  6.42
+#>  9 CLRSKY_SFC_SW_DWN  1984 -27.5  150.  8.58  7.96  6.99  5.62  4.62  4.04  4.33  5.39  6.79  7.81  8.83  8.93  6.66
+#> 10 CLRSKY_SFC_SW_DWN  1984 -27.5  152.  8.55  7.97  6.92  5.59  4.55  4.03  4.32  5.33  6.74  7.70  8.64  8.93  6.60
+#> # ℹ 54 more rows
+```
+
+### Example fetching climatology data
+
+Climatology data can be retrieved for point or regional areas as
+demonstrated previously. Change the `temporal_api` value to
+“climatology” to get these data.
+
+Fetch “ag” climatology for temperature and relative humidity for
+Kingsthorpe, Queensland, Australia.
+
+``` r
+
+climatology_ag <- get_power(
+  community = "ag",
+  pars = c("T2M", "RH2M"),
+  lonlat = c(151.81, -27.48),
+  temporal_api = "climatology"
+)
+
+climatology_ag
+#> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> 
+#> ── NASA/POWER Source Native Resolution Climatology in LST ───────────────────────────────────────────────────────────
+#> 20-year Meteorological and Solar Monthly & Annual Climatologies (January 2001 - December 2020)
+#> Location: Latitude -27.48 Longitude 151.81
+#> Elevation from MERRA-2: Average for 0.5 x 0.625 degree lat/lon region = 442.77 meters
+#> The value for missing source data that cannot be computed or is outside of the sources availability range: NA
+#> Parameter(s):
+#> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> Parameters:
+#> RH2M MERRA-2 Relative Humidity at 2 Meters (%) ; T2M MERRA-2 Temperature at 2 Meters (C) ; Message(s): ; The
+#> requested parameters are retrieved from a pre-computed climatological period (January 2001 - December 2020)
+#> ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+#> # A tibble: 2 × 16
+#>     LON   LAT PARAMETER   JAN   FEB   MAR   APR   MAY   JUN   JUL   AUG   SEP   OCT   NOV   DEC   ANN
+#>   <dbl> <dbl> <chr>     <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+#> 1  152. -27.5 RH2M       64.7  69.6  71.1  70.5  69.2  75.1  70.4  63.1  59.9  59.4  60.3  63.3  66.4
+#> 2  152. -27.5 T2M        24.6  23.7  22.0  19    15.1  12.6  11.6  13.1  16.9  20.0  22.2  23.7  18.7
+```
+
+*Note* the associated metadata in the data frame header are not saved if
+the data are exported to a file format other than an R data format,
+*e.g.*, .Rdata, .rda or .rds.
+
+## Interrogating the API for available parameters
+
+The POWER API offers functionality to get detailed information on any
+parameter offered or all parameters that are offered for a given
+community and temporal API. This can be used to find available parameter
+names and definitions for each community and temporal API.
+
+Fetch the complete available information for the temperature at 2 metres
+above the Earth’s surface, T2M.
+
+``` r
+
+query_parameters(pars = "T2M")
+#> $T2M
+#> $T2M$temporal
+#>                                                                               HOURLY
+#> 1                                                            Temperature at 2 Meters
+#> 2 The average air (dry bulb) temperature at 2 meters above the surface of the earth.
+#> 3                                                                         AG, RE, SB
+#> 4                                                                              FALSE
+#>                                                                                DAILY
+#> 1                                                            Temperature at 2 Meters
+#> 2 The average air (dry bulb) temperature at 2 meters above the surface of the earth.
+#> 3                                                                         AG, RE, SB
+#> 4                                                                              FALSE
+#>                                                                              MONTHLY
+#> 1                                                            Temperature at 2 Meters
+#> 2 The average air (dry bulb) temperature at 2 meters above the surface of the earth.
+#> 3                                                                         AG, RE, SB
+#> 4                                                                              FALSE
+#>                                                                          CLIMATOLOGY
+#> 1                                                            Temperature at 2 Meters
+#> 2 The average air (dry bulb) temperature at 2 meters above the surface of the earth.
+#> 3                                                                         AG, RE, SB
+#> 4                                                                              FALSE
+#> 
+#> $T2M$type
+#> [1] "METEOROLOGY"
+```
+
+Fetch complete temporal and community specific attribute information for
+“T2M” in the “ag” community for the “hourly” temporal API.
+
+``` r
+
+query_parameters(pars = "T2M",
+                 community = "ag",
+                 temporal_api = "hourly")
+#> $T2M
+#> $T2M$type
+#> [1] "METEOROLOGY"
+#> 
+#> $T2M$temporal
+#> [1] "HOURLY"
+#> 
+#> $T2M$source
+#> [1] "SOURCE"
+#> 
+#> $T2M$community
+#> [1] "AG"
+#> 
+#> $T2M$calculated
+#> [1] FALSE
+#> 
+#> $T2M$inputs
+#> NULL
+#> 
+#> $T2M$units
+#> [1] "C"
+#> 
+#> $T2M$name
+#> [1] "Temperature at 2 Meters"
+#> 
+#> $T2M$definition
+#> [1] "The average air (dry bulb) temperature at 2 meters above the surface of the earth."
+```
+
+## A Note on API Throttling
+
+The POWER API endpoints limit queries to prevent overloads due to
+repetitive and rapid requests. If you find that the API is throttling
+your queries, I suggest that you investigate the use of `limit_rate()`
+from [*ratelimitr*](https://cran.r-project.org/package=ratelimitr) to
+create self-limiting functions that will respect the rate limits that
+the API has in place. It is best to check the [POWER
+website](https://power.larc.nasa.gov/docs/services/api/#rate-limiting)
+for the latest rate limits as they differ between temporal APIs and may
+change over time as the project matures.
+
+## References
+
+<https://power.larc.nasa.gov>
+
+<https://power.larc.nasa.gov/docs/methodology/>
